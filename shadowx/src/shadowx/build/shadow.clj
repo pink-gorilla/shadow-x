@@ -60,7 +60,7 @@
     (ensure-karma)
 
     (when npm-install
-      (info "webly: npm install ..")
+      (info "shadow-x: npm install ..")
       (install-npm shadow-config shadow-opts))
 
     (let [s (case shadow-mode

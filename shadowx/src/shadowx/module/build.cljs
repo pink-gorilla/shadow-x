@@ -57,7 +57,7 @@
     :ok))
 
 (defn print-build-summary []
-  (println (str "webly-build summary:"
+  (println (str "shadow-x build summary:"
                 "\nlazy modules: " (-> @lazy-modules-a keys sort)
                 "\nlazy-ns-loadable: " (-> @lazy-ns-loadable-a keys sort)
                 ;"\nlazy-ns-vars: " (-> @lazy-ns-vars-a keys sort) ; KEYS identical to lazy-ns-loadable

@@ -16,7 +16,7 @@
     (if bundle
       (do (info "building bundle: " bundle)
           (write-shadow-config shadow-config)
-          (write-edn-private "shadow-cljs" shadow-config)
+          (write-edn-private :shadowx-shadow-config shadow-config)
 
           (write-build-prefs)
           (shadow-build profile shadow-config)

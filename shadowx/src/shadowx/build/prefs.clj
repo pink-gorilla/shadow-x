@@ -29,4 +29,4 @@
     without))
 
 (defn write-build-prefs []
-  (write-edn-private "cljsbuild-prefs" @prefs-atom))
+  (write-edn-private :shadowx-prefs @prefs-atom))
