@@ -11,7 +11,7 @@
 
 (defn build
   ([exts opts profile]
-   (build ext opts profile "default"))
+   (build exts opts profile "default"))
   ([exts opts profile version]
    (info "build profile: " profile " version: " version)
    (let [bundle (get profile :bundle)
