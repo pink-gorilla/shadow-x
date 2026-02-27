@@ -44,7 +44,7 @@
            :main-path main-path
            :asset-path asset-path
            :advanced? advanced?)
-    (write-edn-private :shadow-modules shadow-modules)
+    (write-edn-private :shadowx-modules shadow-modules)
     {:cache-root ".shadow-cljs"
      :verbose (if shadow-verbose true false)
      :lein false
