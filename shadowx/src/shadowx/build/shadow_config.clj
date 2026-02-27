@@ -30,7 +30,7 @@
         build (merge default/build build) ; in case user just specified some keys
         shadow (merge default/shadow shadow)
         {:keys [module-loader-init output-dir]} build
-        output-dir (str output-dir "/" version)
+        output-dir (str output-dir "/" version) ; this is the local filepath
         dev-http-port (get-in shadow [:dev-http :port])
         http-port (get-in shadow [:http :port])
         http-host (get-in shadow [:http :host])
@@ -38,6 +38,7 @@
         main-path (if static? static-main-path "")
         prefix (str main-path prefix)
         asset-path  (subs prefix 0 (dec (count prefix))) ;  "/r/" => "/r"
+        asset-path (str asset-path "/" version)
         modules (create-modules exts)
         shadow-modules (shadow-module-config modules)]
     (swap! prefs-atom assoc

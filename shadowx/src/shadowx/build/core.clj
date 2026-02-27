@@ -6,6 +6,9 @@
    [shadowx.build.shadow :refer [shadow-build]] ; shadow via generated config file
    [shadowx.build.prefs :refer [write-build-prefs]]))
 
+(defn write-shadow-config [config]
+  (write "shadow-cljs.edn" config))
+
 (defn build
   ([exts opts profile]
    (build exts opts profile "default"))
@@ -15,8 +18,8 @@
          shadow-config (shadow-config exts opts profile version)]
      (if bundle
        (do (info "building bundle: " bundle)
-           ;(write-shadow-config shadow-config)
-           (write-edn-private :shadowx-shadow-config shadow-config)
+           (write-shadow-config shadow-config) ; this outputs the shadow-config that shadow-cljs reads
+           (write-edn-private :shadowx-shadow-config shadow-config) ; same as the shadow config, but in .gorilla path
            (write-build-prefs)
            (shadow-build profile shadow-config)
           ;(write-target "lazy" ()[name data])
