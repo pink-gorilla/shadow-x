@@ -10,7 +10,7 @@
   (write "shadow-cljs.edn" config))
 
 (defn build [exts opts profile]
-  (info "webly build profile: " profile)
+  (info "build profile: " profile)
   (let [bundle (get profile :bundle)
         shadow-config (shadow-config exts opts profile)]
     (if bundle

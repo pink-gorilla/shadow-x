@@ -10,6 +10,8 @@
   {:ns-cljs []
    :modules {}
    :module-loader-init false ; important, because we need to load on different paths
-   :output-dir ".gorilla/public"})
+   :output-dir ".gorilla/public"
+   :version "default"
+   })
 
 (def prefix "/r/")

@@ -30,6 +30,7 @@
         build (merge default/build build) ; in case user just specified some keys
         shadow (merge default/shadow shadow)
         {:keys [module-loader-init output-dir]} build
+        output-dir (str output-dir "/" version)                        )
         dev-http-port (get-in shadow [:dev-http :port])
         http-port (get-in shadow [:http :port])
         http-host (get-in shadow [:http :host])
