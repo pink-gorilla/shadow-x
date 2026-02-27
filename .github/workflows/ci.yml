@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04 # ubuntu-latest has chromium headless error
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: latest
+    - name: Prepare java    # java needs to be installed before clojure.
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu' # https://github.com/actions/setup-java/blob/main/README.md#Supported-distributions
+        java-version: '17'
+        java-package: jdk # optional (jdk or jre) - defaults to jdk
+    - name: Install clojure tools
+      uses: DeLaGuardo/setup-clojure@12.5
+      with:
+        cli: 1.10.3.1029 # Clojure CLI based on tools.deps
+        bb: 0.7.8                    # Babashka
+        clj-kondo: 2022.05.31        # Clj-kondo
+        cljfmt: 0.10.2               # cljfmt
+    - name: cljfmt lint
+      run: |
+       cd shadowx
+       clojure -M:cljfmt check src
+       clojure -M:lint src
+    - name: clojars deploy
+      if: success()
+      # if: github.event_name == 'push'
+      env:
+        CLOJARS_USERNAME: ${{ secrets.ReleaseUsername }}
+        CLOJARS_PASSWORD: ${{ secrets.ReleasePassword }}
+        CODECOV_TOKEN: ${{ secrets.CodecovToken }}
+      run: |
+        git config --global user.email "ci@pinkgorilla.org"
+        git config --global user.name "CI/CD"
+        cd shadowx
+        clojure -T:build jar
+        clojure -T:build deploy
+      # bash <(curl -s https://codecov.io/bash)
+      # lein with-profile +relay-jetty cloverage
+      #  bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json
+      #
+      # Could not transfer metadata foo:bar/maven-metadata.xml from/to releases (https://clojars.org/repo): Read timed out
+      # Default 10000 not enough for us
+      # export LEIN_JVM_OPTS="-Dmaven.wagon.rto=90000"
