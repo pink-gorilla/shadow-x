@@ -4,12 +4,8 @@ pom.xml.asc
 *.class
 /lib/
 /classes/
-/target/
+target/*
 /checkouts/
-.lein-deps-sum
-.lein-repl-history
-.lein-plugins/
-.lein-failures
 .nrepl-port
 .cpcache/
 /test/creds.edn
@@ -26,7 +22,6 @@ package-lock.json
 /karma.conf.js
 .webly
 certs
-target/
 ci/deps.edn
 demo-webly/karma.conf.js
 \#*\#
@@ -40,3 +35,4 @@ creds-localhost.edn
 .~*
 .gorilla
 demo/karma.conf.js
+shadowx/target/classes

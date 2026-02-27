@@ -48,6 +48,7 @@ jobs:
         cd shadowx
         clojure -T:build jar
         clojure -T:build deploy
+        clojure -T:build clean
       # bash <(curl -s https://codecov.io/bash)
       # lein with-profile +relay-jetty cloverage
       #  bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json
