@@ -9,20 +9,22 @@
 (defn write-shadow-config [config]
   (write "shadow-cljs.edn" config))
 
-(defn build [exts opts profile]
-  (info "build profile: " profile)
-  (let [bundle (get profile :bundle)
-        shadow-config (shadow-config exts opts profile)]
-    (if bundle
-      (do (info "building bundle: " bundle)
-          (write-shadow-config shadow-config)
-          (write-edn-private :shadowx-shadow-config shadow-config)
-
-          (write-build-prefs)
-          (shadow-build profile shadow-config)
+(defn build
+  ([exts opts profile]
+   (build ext opts profile "default"))
+  ([exts opts profile version]
+   (info "build profile: " profile " version: " version)
+   (let [bundle (get profile :bundle)
+         shadow-config (shadow-config exts opts profile version)]
+     (if bundle
+       (do (info "building bundle: " bundle)
+           (write-shadow-config shadow-config)
+           (write-edn-private :shadowx-shadow-config shadow-config)
+           (write-build-prefs)
+           (shadow-build profile shadow-config)
           ;(write-target "lazy" ()[name data])
-          )
-      (warn "profile has no bundle"))))
+           )
+       (warn "profile has no bundle")))))
 
 ;(comment
   ;(get-shadow-server-config)

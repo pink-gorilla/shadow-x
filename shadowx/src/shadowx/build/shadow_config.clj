@@ -21,7 +21,7 @@
                            shadow default/shadow
                            prefix default/prefix
                            static-main-path ""}
-                      :as _config} profile]
+                      :as _config} profile version]
   (let [;; PROFILE *************************************************
         advanced? (get-in profile [:bundle :advanced])
         shadow-verbose (get-in profile [:bundle :shadow-verbose])
@@ -29,7 +29,7 @@
         ;; CONFIG **************************************************
         build (merge default/build build) ; in case user just specified some keys
         shadow (merge default/shadow shadow)
-        {:keys [module-loader-init output-dir version]} build
+        {:keys [module-loader-init output-dir]} build
         output-dir (str output-dir "/" version)
         dev-http-port (get-in shadow [:dev-http :port])
         http-port (get-in shadow [:http :port])
