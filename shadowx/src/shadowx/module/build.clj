@@ -157,7 +157,7 @@
                      (apply concat)
                      (into []))]
     [:main {:entries entries
-             :depends-on #{:init}}]))
+            :depends-on #{:init}}]))
 
 (defn- lazy-shadow-module [{:keys [name cljs-namespace depends-on]}]
   (let [depends-on (clojure.set/union #{:main} depends-on)] ; :init

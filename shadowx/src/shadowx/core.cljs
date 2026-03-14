@@ -6,8 +6,6 @@
    [shadowx.impl.url :refer [current-path entry-path entry-path-full]]
    [shadowx.module.build :as build]))
 
-
-
 (build/add-lazy-modules)
 (build/print-build-summary)
 
@@ -32,7 +30,6 @@
 (defn str2 [s1 s2]
   (.concat s1 s2))
 
-
 ;; mode
 
 (defonce mode-a (atom :dynamic))
@@ -53,7 +50,6 @@
 
 (defn get-routing-path []
   @routing-path-a)
-
 
 (defn set-mode! [mode]
   (println "shadowx set-mode! " mode)
@@ -77,12 +73,11 @@
       (println "shadowx dynamic mode: routing-path:" (get-routing-path) " resource-path:" (get-resource-path))
       (shadow-loader/init ""))))
 
-
 (defn ^:export start [start-s mode]
   (println "shadowx starting: " start-s " mode: " mode)
   (let [_ (set-mode! mode)
         start-s (symbol start-s)
-        start-fn-p (build/webly-resolve start-s)] 
+        start-fn-p (build/webly-resolve start-s)]
     (-> start-fn-p
         (.then (fn [start-fn]
                  (println "shadowx start-fn got resolved successfully. now starting!")

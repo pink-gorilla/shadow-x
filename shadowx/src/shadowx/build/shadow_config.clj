@@ -60,23 +60,23 @@
    ;:user-config {}
    ;
      :builds {:app {:target :browser
-                      :module-loader true
-                      :module-loader-init module-loader-init ; bool, true = auto-init, false = manual-init
-                      :output-dir output-dir
-                      :asset-path asset-path
-                      :modules shadow-modules
+                    :module-loader true
+                    :module-loader-init module-loader-init ; bool, true = auto-init, false = manual-init
+                    :output-dir output-dir
+                    :asset-path asset-path
+                    :modules shadow-modules
                     ;:devtools {:before-load (symbol "webly.web.app/before-load")
                     ;           :after-load (symbol "webly.web.app/after-load")}
                       ;:build-options    {:ns-aliases (build-ns-aliases)}
-                      :compiler-options {:optimizations (if advanced?
-                                                          :advanced
-                                                          :simple)
+                    :compiler-options {:optimizations (if advanced?
+                                                        :advanced
+                                                        :simple)
                                         ; :optimizations   :none ;; Beware: releasing :none not supported by shadow
                                          ;:pretty-print true
                                         ;:keep-native-requires true
                                          ;:closure-defines {re-highlight-demo.config/version "lein-git-inject/version"}
-                                         :output-feature-set :es8 ; this should fix vega polyfill problems
-                                         }
+                                       :output-feature-set :es8 ; this should fix vega polyfill problems
+                                       }
                     ;:build-id :app
                     ;:js-options  {:minimize-require false ; module requires full name instead of index
                     ;              ;:js-package-dirs ["packages/babel-worker/node_modules"]
@@ -84,7 +84,7 @@
                       ;             :js-provider :closure
                       ;            :js-provider :shadow                                            
                     ;                     }
-                      }
+                    }
               :ci     {:target :karma
                        :output-to  ".gorilla/ci.js"
                        :ns-regexp "-test$"}}}))

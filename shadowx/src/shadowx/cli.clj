@@ -4,9 +4,8 @@
    [extension :refer [discover get-extensions]]
    [modular.writer :refer [write-edn-private]]
    [shadowx.build.core :refer [build]]
-   [shadowx.build.profile :refer [setup-profile]]
-   )
-   (:gen-class))
+   [shadowx.build.profile :refer [setup-profile]])
+  (:gen-class))
 
 (defn build-cli [{:keys [config profile version]
                   :or {version "default"}}]
@@ -19,6 +18,4 @@
     (write-edn-private :shadowx-build-config config)
     (println "profile: " profile)
     (let [full-profile (setup-profile profile)]
-       (build exts config full-profile version)  
-      )
-    ))
+      (build exts config full-profile version))))
