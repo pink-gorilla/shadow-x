@@ -1,0 +1,7 @@
+{:name "demo-app"
+ :lazy false
+ :cljs-namespace [demo.app]
+ :cljs-ns-bindings {'demo.app {'start demo.app/start}} 
+ 
+
+ }

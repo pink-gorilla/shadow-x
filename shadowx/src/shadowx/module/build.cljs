@@ -58,8 +58,8 @@
 
 (defn print-build-summary []
   (println (str "shadow-x build summary:"
-                "\nlazy modules: " (-> @lazy-modules-a keys sort)
-                "\nlazy-ns-loadable: " (-> @lazy-ns-loadable-a keys sort)
+                "\nshadowx lazy modules: " (-> @lazy-modules-a keys sort)
+                "\nshadowx lazy-ns-loadable: " (-> @lazy-ns-loadable-a keys sort)
                 ;"\nlazy-ns-vars: " (-> @lazy-ns-vars-a keys sort) ; KEYS identical to lazy-ns-loadable
                 ;"\nlazy-ns-loadable FULL: "  @lazy-ns-loadable-a)  
                 )))
@@ -108,7 +108,7 @@
             (p/then (fn [vars]
                       ;(println "load-namespace vars successfully received!")
                       (p/resolve! rp (assemble-simple-ns ns-name vars))))))
-      (do (println "cannot load-namespace [" (pr-str ns-name) "] - not a simple-namespace!")
+      (do (println "shadowx cannot load-namespace [" (pr-str ns-name) "] - not a simple-namespace!")
           (p/reject! rp (str "cannot load-namespace: "
                              ns-name " - is not a simple-namespace"))))
     rp))
@@ -124,9 +124,9 @@
                   (if-let [fun (get ns-map fn-symbol)]
                     (do ;(println "resolved successfully: " fq-symbol)
                       (p/resolve! rp fun))
-                    (do (println "could not resolve: " fq-symbol " in namespace: " ns-symbol)
+                    (do (println "shadowx resolve error: " fq-symbol " in namespace: " ns-symbol)
                         (p/reject! rp (str "namespace does not contain function: " fn-symbol))))))
         (p/catch (fn [err]
-                   (println "error in resolving " fq-symbol ": namespace not found: " ns-symbol " error: " err)
+                   (println "shadowx resolve error: " fq-symbol ": namespace not found: " ns-symbol " error: " err)
                    (p/reject! rp (str "namespace could not get loaded: " ns-symbol)))))
     rp))

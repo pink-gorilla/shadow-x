@@ -156,11 +156,11 @@
   (let [entries (->> (map :cljs-namespace main-modules)
                      (apply concat)
                      (into []))]
-    [:webly {:entries entries
+    [:main {:entries entries
              :depends-on #{:init}}]))
 
 (defn- lazy-shadow-module [{:keys [name cljs-namespace depends-on]}]
-  (let [depends-on (clojure.set/union #{:webly} depends-on)] ; :init
+  (let [depends-on (clojure.set/union #{:main} depends-on)] ; :init
     (println "module: " name " depends-on: " depends-on)
     [(keyword name) {:entries (vec cljs-namespace)
                      :depends-on depends-on}]))
@@ -170,7 +170,7 @@
    output: the :modules section of the shadow-config"
   [{:keys [modules]}]
   (let [{:keys [main lazy]} modules
-        module-init [:init {:entries ['webly.init],
+        module-init [:init {:entries ['shadowx.core],
                             :depends-on #{}}]
         module-main (main-shadow-module main)
         modules-lazy (map lazy-shadow-module lazy)

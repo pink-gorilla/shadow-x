@@ -13,6 +13,7 @@
                               ;:exclusions [org.clojure/tools.reader] ; outdated
         ;{thheller/shadow-cljsjs "0.0.21"}  ; already referred to from shadow-cljs
         ;org.clojure/clojurescript {:mvn/version "1.10.879"} ; already referred from shadow-cljs
+        com.cemerick/url {:mvn/version "0.1.1"}  ; url query-strings
         ; modular
         org.pinkgorilla/timbre {:mvn/version "0.0.8"}
         org.pinkgorilla/extension {:mvn/version "0.0.16"} ; brings modular

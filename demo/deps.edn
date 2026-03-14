@@ -1,0 +1,22 @@
+{:paths ["src"]
+ :deps {org.pinkgorilla/modular {:mvn/version "0.3.76"}
+        org.pinkgorilla/webserver {:mvn/version "0.2.71"}
+        org.pinkgorilla/shadow-x {:local/root "../shadowx" :deps/manifest :deps}}
+ :aliases
+ {:build {:extra-deps {}
+          :exec-fn shadowx.cli/build-cli
+          :exec-args {:config {:shadow {:ring-handler "demo.handler/handler"}}
+                      :profile "npm-install"
+                      :version "prod1"}}
+
+  :npm-install {:exec-args {:profile "npm-install"}}
+  :compile {:exec-args {:profile "compile"}}
+  :release {:exec-args {:profile "release"}}
+  :release-adv {:exec-args {:profile "release-adv"}}
+  :watch {:exec-args {:profile "watch"}}
+  :ci {:exec-args {:profile "ci"}}
+
+
+  ;
+  }}
+

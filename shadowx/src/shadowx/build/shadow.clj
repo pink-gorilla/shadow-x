@@ -24,10 +24,10 @@
 
 (defn generate-bundlesize-report [_profile shadow-config]
   ;(println "generate-bundlesize-report profile:" profile " shadow-config: " shadow-config)
-  (let [build-data (-> shadow-config :builds :webly)]
+  (let [build-data (-> shadow-config :builds :app)]
     ;(println "generate-bundlesize-report build-data: " build-data)
     (shadow.cljs.build-report/generate
-     (merge build-data {:build-id :webly}) ; previously this was only the build-id as a keyword
+     (merge build-data {:build-id :app}) ; previously this was only the build-id as a keyword
      {; tag
     ; data-file
       :print-table true

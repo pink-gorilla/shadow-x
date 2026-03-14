@@ -59,7 +59,7 @@
 
    ;:user-config {}
    ;
-     :builds {:webly {:target :browser
+     :builds {:app {:target :browser
                       :module-loader true
                       :module-loader-init module-loader-init ; bool, true = auto-init, false = manual-init
                       :output-dir output-dir
@@ -77,7 +77,7 @@
                                          ;:closure-defines {re-highlight-demo.config/version "lein-git-inject/version"}
                                          :output-feature-set :es8 ; this should fix vega polyfill problems
                                          }
-                    ;:build-id :webly
+                    ;:build-id :app
                     ;:js-options  {:minimize-require false ; module requires full name instead of index
                     ;              ;:js-package-dirs ["packages/babel-worker/node_modules"]
                     ;              ;:js-provider :require

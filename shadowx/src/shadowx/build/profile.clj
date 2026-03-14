@@ -14,33 +14,33 @@
 
    :release     {:prefs   {}
                  :bundle {:shadow-verbose false
-                          :cljs-build :webly
+                          :cljs-build :app
                           :shadow-mode :release ; production build - no source maps
                           :size-report true}}
 
    :release-adv  {:prefs   {}
                   :bundle {:shadow-verbose false
-                           :cljs-build :webly
+                           :cljs-build :app
                            :shadow-mode :release ; production build - no source maps
                            :advanced true
                            :size-report true}}
 
    :npm-install  {:prefs   {}
                   :bundle {:shadow-verbose false
-                           :cljs-build :webly
+                           :cljs-build :app
                            :shadow-mode nil ; no build, just npm install
                            :size-report false
                            :npm-install true}}
 
    :compile     {:prefs   {}
                  :bundle {:shadow-verbose false
-                          :cljs-build :webly
+                          :cljs-build :app
                           :shadow-mode :compile  ; compile has source maps
                           :size-report false}}
 
    :watch       {:prefs   {}
                  :bundle {:shadow-verbose true
-                          :cljs-build :webly
+                          :cljs-build :app
                           :shadow-mode :watch
                           :size-report false}}})
 
