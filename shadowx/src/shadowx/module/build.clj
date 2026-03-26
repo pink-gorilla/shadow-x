@@ -103,7 +103,7 @@
 ;; SERVICE
 
 (defn set-module [{:keys [name lazy cljs-namespace cljs-ns-bindings] :as module}]
-  (let [extension-name (cond 
+  (let [extension-name (cond
                          (:extension/name module) (:extension/name module)
                          name (if (string? name) (keyword name) name) ; old syntax
                          :unknown)]
