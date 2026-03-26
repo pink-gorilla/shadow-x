@@ -1,0 +1,8 @@
+{:name :rtable
+ :lazy true
+ :cljs/when-defined :renderer
+ :cljs-namespace [demo.rtable]
+ :cljs-ns-bindings {'demo.rtable {'render demo.rtable/render}} 
+ ; this should nto be included, as no extensiond defines :renderer
+ 
+ }

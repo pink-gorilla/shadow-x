@@ -63,6 +63,7 @@
                 ;"\nlazy-ns-vars: " (-> @lazy-ns-vars-a keys sort) ; KEYS identical to lazy-ns-loadable
                 ;"\nlazy-ns-loadable FULL: "  @lazy-ns-loadable-a)  
                 )))
+
 (defn load-namespace-raw
   "returns a promise containing the resolved loadables for a namespace"
   [ns-name]

@@ -23,9 +23,11 @@
   ;(println "ns-name: " (pr-str ns-name) "keyword: " (->keyword ns-name))
   [(->keyword ns-name) (convert-ns-def module-name ns-def)])
 
-(defn- module->ns [{:keys [name cljs-ns-bindings]}]
+(defn- module->ns [module]
+  (let [name (:extension/name module)
+        cljs-ns-bindings (:cljs/ns-bindings module)]
   ; namespaces per module is needed to find the module that needs to be loaded for a ns
-  (map #(convert-ns name %) cljs-ns-bindings))
+    (map #(convert-ns name %) cljs-ns-bindings)))
 
 (defn modules->ns-map [modules]
   (->> (reduce concat [] (map module->ns modules))
@@ -61,14 +63,13 @@
     (warn "lazy namespaces: " l)
     (into [] l)))
 
-(defn- set-lazy-modules! [_exts lazy-modules]
-  (let [spec (modules->ns-map lazy-modules)
-        ns-vars (ns-map->vars spec)
+(defn- set-lazy-modules! [{:keys [spec modules]}]
+  (let [ns-vars (ns-map->vars spec)
         ns-loadable (ns-map->loadable spec)]
     (write-edn-private :shadowx-lazy-namespaces spec)
     (write-edn-private :shadowx-lazy-ns-vars ns-vars)
     (write-edn-private :shadowx-lazy-ns-loadable ns-loadable)
-    (reset! lazy-modules-a (map :name lazy-modules))
+    (reset! lazy-modules-a modules)
     (reset! lazy-ns-a spec)
     (reset! lazy-ns-vars-a ns-vars)
     (reset! lazy-ns-loadable-a ns-loadable)))
@@ -77,17 +78,6 @@
   (let [ns-vars @lazy-ns-vars-a]
     ;`(reset! shadowx.module.build/lazy-ns-vars-a ~ns-vars)
     `(shadowx.module.build/set-ns-vars ~ns-vars)))
-
-#_(defmacro set-ns-loadables-test! []
-    ;specs
-    ; lazy/loadable macro. It expects one argument which is 
-    ; - a qualified symbol, 
-    ; - a vector of symbols or
-    ; - a map of keyword to symbol.
-    `(reset! shadowx.module.build/lazy-ns-loadable-a
-             {:'bongistan.core (shadow.lazy/loadable
-                                [snippets.snip/add
-                                 snippets.snip/ui-add])}))
 
 (defmacro set-ns-loadables! []
   (let [loadables @lazy-ns-loadable-a]
@@ -112,71 +102,129 @@
 
 ;; SERVICE
 
-(defn- module? [{:keys [cljs-namespace]}]
-  (> (count cljs-namespace) 0))
+(defn set-module [{:keys [name lazy cljs-namespace cljs-ns-bindings name] :as module}]
+  (let [extension-name (if (string? name)
+                         (keyword name)
+                         name)]
+    {:extension/name extension-name
+     :cljs/module (or (:cljs/module module)
+                      (if lazy ; old syntax
+                        extension-name ; lazy module get the extension name by defualt
+                        :main))
+     :cljs/depends-on  (or (:cljs/depends-on module)
+                           (if lazy ; old syntax
+                             #{:main}
+                             #{:init}))
+     :cljs/namespace (cond 
+                       (seq (:cljs/namespace module)) (:cljs/namespace module)
+                       (seq cljs-namespace) cljs-namespace ; old syntax
+                       :else  [])
+     :cljs/ns-bindings (cond 
+                         (seq (:cljs/ns-bindings module)) (:cljs/ns-bindings module)
+                         (seq cljs-ns-bindings) cljs-ns-bindings  ; old syntax
+                         :else {})
+     :cljs/define (or (:cljs/define module)
+                      nil
+                      )
+     :cljs/when-defined (or (:cljs/when-defined module)
+                            nil)
+     
+     }))
 
-(defn- lazy-module? [{:keys [lazy]}]
-  lazy)
 
-(defn- consolidate-main-modules [main-modules]
-  (let [entries (->> (map :cljs-namespace main-modules)
-                     (apply concat)
-                     (into []))
-        bindings (->> (map :cljs-ns-bindings main-modules)
-                      (apply merge))]
-    {:name "webly"
-     :cljs-namespace  entries
-     :cljs-ns-bindings bindings
-     :depends-on #{:init}}))
+(defn filter-conditional-not-defined [modules]
+  (let [def2set (->> modules
+                     (map :cljs/define)
+                     (remove nil?)
+                     (into #{}))
+        modules-without-defined (->> modules
+                                     (remove :cljs/when-defined))
+        modules-when-defined (->> modules
+                                  (filter :cljs/when-defined))
+        modules-conditional-included (->> modules-when-defined
+                                          (filter #(contains? def2set (:cljs/when-defined %))))
+        stats {:defines def2set
+               :all (into [(count modules)] (map :extension/name modules))
+               :always (into [(count modules-without-defined)] (map :extension/name modules-without-defined))
+               :conditional (into [(count modules-when-defined)] (map :extension/name modules-when-defined))
+               :conditional-included (into [(count modules-conditional-included)] (map :extension/name modules-conditional-included))}]
+    (write-edn-private :shadowx-module-conditional stats)
+    (concat modules-without-defined modules-conditional-included)))
+
+(defn- consolidate-extensions [[cljs-module extensions]]
+  [cljs-module
+   {:extension/list (->> (map :extension/name extensions)
+                         (into []))
+    :ns-bindings (->> (map :cljs/ns-bindings extensions)
+                      (apply merge))
+    ; shadow-cljs data
+    :entries  (->> (map :cljs/namespace extensions)
+                   (apply concat)
+                   (into []))
+    :depends-on  (->> (map :cljs/depends-on extensions)
+                      (apply clojure.set/union))}])
+
+
+(defn consolidate [extensions]
+  (let [items (->> extensions
+                   (group-by :cljs/module)
+                   (map consolidate-extensions)
+                   (into {}))]
+    items))
+
+(defn create-loadables [items]
+  {:modules (keys items)
+   :spec (->> items
+              (map (fn [[module {:keys [ns-bindings]}]]
+                     ;ns-bindings
+                     (->> ns-bindings
+                          (map (fn [[ns-s ns-def]]
+                                 [(->keyword ns-s)
+                                  {:module module
+                                   :ns-vars (->> ns-def keys (map ->keyword) (into []))
+                                   :loadable (->> ns-def vals (into []))}])))))
+              (apply concat)
+              (into {}))})
+
+(defn shadow-modules [items]
+  (->> items
+       (map (fn [[k v]]
+              [k (select-keys v [:entries :depends-on])]))
+       (into {:init {:entries ['shadowx.core],
+                     :depends-on #{}}})))
+
+(defn- module? [module]
+  (> (count (:cljs/namespace module)) 0))
+
 
 (defn create-modules
   "processes discovered extensions
    outputs a state that contains module information
    consider it the start-fn of a service."
   [exts]
-  (let [modules (get-extensions exts {:name "unknown"
-                                      :lazy false
-                                      :cljs-namespace []
-                                      :cljs-ns-bindings {}
-                                      :depends-on #{}})
-        valid-modules (filter module? modules)
-        lazy-modules (filter lazy-module? valid-modules)
-        main-modules (remove lazy-module? valid-modules)
-        main-module (consolidate-main-modules main-modules)
-        lazy-modules2 (conj lazy-modules main-module)]
-    (write-edn-private :shadowx-module-lazy lazy-modules2)
-    ;(write-service exts :cljsbuild-module-main main-modules)
-    (set-lazy-modules! exts lazy-modules2)
-    {:modules {:main [main-module]
-               :lazy lazy-modules}}))
+  (let [valid-modules (->> (get-extensions exts {:name nil
+                                                 :cljs/module nil
+                                                 :cljs/define nil
+                                                 :cljs/when-defined nil
+                                                 :cljs/namespace []
+                                                 :cljs-namespace []
+                                                 :cljs/ns-bindings {}
+                                                 :cljs-ns-bindings {}
+                                                 ; old syntax
+                                                 :lazy false})
+                           (map set-module)
+                           (filter-conditional-not-defined)
+                           (filter module?))
+        items (consolidate valid-modules)
+        loadables (create-loadables items)]
+    (write-edn-private :shadowx-module-list valid-modules)
+    (write-edn-private :shadowx-module-summary items)
+    (set-lazy-modules! loadables)
+    (shadow-modules items)))
 
-;; SHADOW CONFIG
 
-(defn- main-shadow-module [main-modules]
-  (let [entries (->> (map :cljs-namespace main-modules)
-                     (apply concat)
-                     (into []))]
-    [:main {:entries entries
-            :depends-on #{:init}}]))
 
-(defn- lazy-shadow-module [{:keys [name cljs-namespace depends-on]}]
-  (let [depends-on (clojure.set/union #{:main} depends-on)] ; :init
-    (println "module: " name " depends-on: " depends-on)
-    [(keyword name) {:entries (vec cljs-namespace)
-                     :depends-on depends-on}]))
 
-(defn shadow-module-config
-  "input: the state created by create-modules
-   output: the :modules section of the shadow-config"
-  [{:keys [modules]}]
-  (let [{:keys [main lazy]} modules
-        module-init [:init {:entries ['shadowx.core],
-                            :depends-on #{}}]
-        module-main (main-shadow-module main)
-        modules-lazy (map lazy-shadow-module lazy)
-        modules (-> modules-lazy
-                    (conj module-main)
-                    (conj module-init))]
-    (into {} modules)))
+
 
 

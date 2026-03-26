@@ -1,7 +1,7 @@
 {:name :joke
- :lazy false
- :cljs-namespace [demo.joke]
- :cljs-ns-bindings {'demo.joke {'joke demo.joke/joke}} 
+ :cljs/module :joke
+ :cljs/namespace [demo.joke]
+ :cljs/ns-bindings {'demo.joke {'joke demo.joke/joke}} 
  ; this is the test to lazy load a module. 
  
  }

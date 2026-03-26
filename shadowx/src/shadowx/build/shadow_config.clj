@@ -4,7 +4,7 @@
    [modular.writer :refer [write-edn-private]]
    [shadowx.default :as default]
    [shadowx.build.prefs :refer [if-pref-fn prefs-atom]]
-   [shadowx.module.build :refer [create-modules shadow-module-config]]))
+   [shadowx.module.build :refer [create-modules]]))
 
 ;; build-options
 #_(defn build-ns-aliases []
@@ -39,13 +39,11 @@
         prefix (str main-path prefix)
         asset-path  (subs prefix 0 (dec (count prefix))) ;  "/r/" => "/r"
         asset-path (str asset-path "/" version)
-        modules (create-modules exts)
-        shadow-modules (shadow-module-config modules)]
+        shadow-modules (create-modules exts)]
     (swap! prefs-atom assoc
            :main-path main-path
            :asset-path asset-path
            :advanced? advanced?)
-    (write-edn-private :shadowx-modules shadow-modules)
     {:cache-root ".shadow-cljs"
      :verbose (if shadow-verbose true false)
      :lein false

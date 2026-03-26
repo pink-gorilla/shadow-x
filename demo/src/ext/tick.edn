@@ -1,0 +1,8 @@
+{:name :tick
+ :lazy true
+ :cljs/when-defined :sci
+ :cljs/namespace [demo.tick]
+ :cljs/ns-bindings {'demo.tick {'format demo.tick/format}} 
+ ; this is the test to lazy load a module. 
+ 
+ }

@@ -1,0 +1,8 @@
+{:name :sci
+ :lazy true
+ :cljs/define :sci
+ :cljs-namespace [demo.sci]
+ :cljs-ns-bindings {'demo.sci {'compile demo.sci/compile}} 
+ ; this is the test to lazy load a module. 
+ 
+ }
