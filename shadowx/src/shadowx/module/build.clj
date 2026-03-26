@@ -106,7 +106,7 @@
   (let [extension-name (cond
                          (:extension/name module) (:extension/name module)
                          name (if (string? name) (keyword name) name) ; old syntax
-                         :unknown)]
+                         :else :unknown)]
     {:extension/name extension-name
      :cljs/module (or (:cljs/module module)
                       (if lazy ; old syntax
