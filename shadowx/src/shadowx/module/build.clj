@@ -103,9 +103,10 @@
 ;; SERVICE
 
 (defn set-module [{:keys [name lazy cljs-namespace cljs-ns-bindings] :as module}]
-  (let [extension-name (if (string? name)
-                         (keyword name)
-                         name)]
+  (let [extension-name (cond 
+                         (:extension/name module) (:extension/name module)
+                         name (if (string? name) (keyword name) name) ; old syntax
+                         :unknown)]
     {:extension/name extension-name
      :cljs/module (or (:cljs/module module)
                       (if lazy ; old syntax
@@ -197,6 +198,7 @@
    consider it the start-fn of a service."
   [exts]
   (let [valid-modules (->> (get-extensions exts {:name nil
+                                                 :extension/name nil
                                                  :cljs/module nil
                                                  :cljs/define nil
                                                  :cljs/when-defined nil
