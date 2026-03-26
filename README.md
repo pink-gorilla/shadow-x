@@ -1,17 +1,11 @@
 # shadow-x [![GitHub Actions status |pink-gorilla/shadow-x](https://github.com/pink-gorilla/shadow-x/workflows/CI/badge.svg)](https://github.com/pink-gorilla/shadow-x/actions?workflow=CI)[![Clojars Project](https://img.shields.io/clojars/v/org.pinkgorilla/shadow-x.svg)](https://clojars.org/org.pinkgorilla/shadow-x)
 
-**End Users** this project is not for you.
+- shadow-x creates a shadow-cljs config based on extensions. see [extension](https://github.com/pink-gorilla/extension)
+  extensions allow to bring new features to an application (and can be removed or replaced 
+  without adjusting the application other than including/removing a dependency).
+  It works similar to the discovery of deps.cljs files.
 
-- With shadow-x you can build clj/cljs web apps (server: clj, frontend: reagent/reframe)
-- shadow-x uses great tools such as: reagent, reframe, tailwind-css, shadow-cljs
-- shadow-x brings a things that can be hard to configure (or repetitive) when you develop a web app such as:
-  - unit test runner
-  - routing (via edn config), extensible both in frontend  and backend
-  - keybindings
-  - loading animation
-  - notifications and dialogs
-
-- shadow-x is used in [Goldly](https://github.com/pink-gorilla/goldly).
+- allows to compile / run unit tests with a cli entrypoint. (see compile profiles)
 
 # features
 
