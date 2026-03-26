@@ -34,7 +34,7 @@ jobs:
       run: |
        cd shadowx
        clojure -M:cljfmt check src
-       clojure -M:lint src
+       clojure -M:lint
     - name: clojars deploy
       if: success()
       # if: github.event_name == 'push'

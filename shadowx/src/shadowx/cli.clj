@@ -1,7 +1,7 @@
 (ns shadowx.cli
   (:require
    [modular.config :refer [load-config! get-in-config]]
-   [extension :refer [discover get-extensions]]
+   [extension :refer [discover]]
    [modular.writer :refer [write-edn-private]]
    [shadowx.build.core :refer [build]]
    [shadowx.build.profile :refer [setup-profile]])

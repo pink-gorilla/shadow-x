@@ -18,7 +18,7 @@
         org.pinkgorilla/timbre {:mvn/version "0.0.8"}
         org.pinkgorilla/extension {:mvn/version "0.0.16"} ; brings modular
         org.pinkgorilla/modular {:mvn/version "0.3.74"} ; edn writer
-       
+        
         }
  :aliases
  {; https://github.com/weavejester/cljfmt
@@ -33,8 +33,8 @@
          :main-opts ["-m" "clj-kondo.main"
                      "--fail-level" "error"
                      "--config" "cljkondo.edn"
-                     "--lint"]}
-
+                     "--lint" "src"]}
+  
   :check {:extra-deps {athos/clj-check {:git/url "https://github.com/athos/clj-check.git"
                                         :sha "518d5a1cbfcd7c952f548e6dbfcb9a4a5faf9062"}}
           :main-opts ["-m" "clj-check.check"]}

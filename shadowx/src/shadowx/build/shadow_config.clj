@@ -1,7 +1,6 @@
 (ns shadowx.build.shadow-config
   "generates shadow-cljs.edn based on profile and config"
   (:require
-   [modular.writer :refer [write-edn-private]]
    [shadowx.default :as default]
    [shadowx.build.prefs :refer [if-pref-fn prefs-atom]]
    [shadowx.module.build :refer [create-modules]]))

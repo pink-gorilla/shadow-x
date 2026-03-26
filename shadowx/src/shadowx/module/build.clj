@@ -102,7 +102,7 @@
 
 ;; SERVICE
 
-(defn set-module [{:keys [name lazy cljs-namespace cljs-ns-bindings name] :as module}]
+(defn set-module [{:keys [name lazy cljs-namespace cljs-ns-bindings] :as module}]
   (let [extension-name (if (string? name)
                          (keyword name)
                          name)]
@@ -115,22 +115,18 @@
                            (if lazy ; old syntax
                              #{:main}
                              #{:init}))
-     :cljs/namespace (cond 
+     :cljs/namespace (cond
                        (seq (:cljs/namespace module)) (:cljs/namespace module)
                        (seq cljs-namespace) cljs-namespace ; old syntax
                        :else  [])
-     :cljs/ns-bindings (cond 
+     :cljs/ns-bindings (cond
                          (seq (:cljs/ns-bindings module)) (:cljs/ns-bindings module)
                          (seq cljs-ns-bindings) cljs-ns-bindings  ; old syntax
                          :else {})
      :cljs/define (or (:cljs/define module)
-                      nil
-                      )
+                      nil)
      :cljs/when-defined (or (:cljs/when-defined module)
-                            nil)
-     
-     }))
-
+                            nil)}))
 
 (defn filter-conditional-not-defined [modules]
   (let [def2set (->> modules
@@ -164,7 +160,6 @@
     :depends-on  (->> (map :cljs/depends-on extensions)
                       (apply clojure.set/union))}])
 
-
 (defn consolidate [extensions]
   (let [items (->> extensions
                    (group-by :cljs/module)
@@ -195,7 +190,6 @@
 
 (defn- module? [module]
   (> (count (:cljs/namespace module)) 0))
-
 
 (defn create-modules
   "processes discovered extensions
