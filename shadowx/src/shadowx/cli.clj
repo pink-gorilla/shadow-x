@@ -12,9 +12,7 @@
   (load-config! config)
   (let [config (get-in-config [])
         ext-config {:disabled (or (get-in config [:extension :disabled]) #{})}
-        exts (discover ext-config)]
-    (write-edn-private :shadowx-build-extensions-all (:extensions exts))
-    (write-edn-private :shadowx-build-extensions-disabled (:extensions-disabled exts))
+        exts (discover ext-config)] 
     (write-edn-private :shadowx-build-cli-config config)
     (println "profile: " profile)
     (let [full-profile (setup-profile profile)]
