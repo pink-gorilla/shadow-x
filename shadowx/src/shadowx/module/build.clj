@@ -202,6 +202,7 @@
                                                  :cljs/module nil
                                                  :cljs/define nil
                                                  :cljs/when-defined nil
+                                                 :cljs/depends-on #{:main}
                                                  :cljs/namespace []
                                                  :cljs-namespace []
                                                  :cljs/ns-bindings {}
