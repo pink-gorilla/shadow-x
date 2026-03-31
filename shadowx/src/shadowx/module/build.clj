@@ -198,7 +198,7 @@
   [exts]
   (let [valid-modules (->> (get-extensions exts {:name nil
                                                  :extension/name nil
-                                                
+
                                                  :cljs/define nil
                                                  :cljs/when-defined nil
                                                  :cljs/module nil
