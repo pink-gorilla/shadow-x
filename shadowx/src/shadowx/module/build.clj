@@ -109,9 +109,8 @@
                          :else :unknown)]
     {:extension/name extension-name
      :cljs/module (or (:cljs/module module)
-                      (if lazy ; old syntax
-                        extension-name ; lazy module get the extension name by defualt
-                        :main))
+                      (when lazy extension-name); old syntax - lazy module get the extension name by defualt
+                      :main)
      :cljs/depends-on  (or (:cljs/depends-on module)
                            (if lazy ; old syntax
                              #{:main}
@@ -199,10 +198,11 @@
   [exts]
   (let [valid-modules (->> (get-extensions exts {:name nil
                                                  :extension/name nil
-                                                 :cljs/module nil
+                                                
                                                  :cljs/define nil
                                                  :cljs/when-defined nil
-                                                 :cljs/depends-on #{:main}
+                                                 :cljs/module nil
+                                                 :cljs/depends-on nil
                                                  :cljs/namespace []
                                                  :cljs-namespace []
                                                  :cljs/ns-bindings {}
